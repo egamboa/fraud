@@ -8,26 +8,12 @@ module.exports = (engine) => {
   engine.addRule({
     conditions: {
       any: [{
-        all: [/*{
-          fact: 'gameDuration',
-          operator: 'equal',
-          value: 40
-        },*/ {
+        all: [{
           fact: 'paymentAttempts',
           operator: 'greaterThanInclusive',
           value: 5
         }]
-      }/*, {
-        all: [{
-          fact: 'gameDuration',
-          operator: 'equal',
-          value: 48
-        }, {
-          fact: 'personalFoulCount',
-          operator: 'greaterThanInclusive',
-          value: 6
-        }]
-      }*/]
+      }]
     },
     event: {  // define the event to fire when the conditions evaluate truthy
       type: 'fouledOut',
@@ -39,8 +25,6 @@ module.exports = (engine) => {
 
 
   self.index = (req, res) => {
-    //req.body <==
-    //engine.
     /*
     * 1 membership will be flag as suspicious if has more than 3 payment attempts.
         * { membId: 12345, paymentAttempts: 3 } -> flagged
@@ -53,7 +37,8 @@ module.exports = (engine) => {
       .then(results => {
         console.log(results);
         res.send(results.events);
-      })
+        return;
+      }).catch( error => console.log('error :>> ', error));
     } else {
       res.send('algo');
     }
