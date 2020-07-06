@@ -3,10 +3,6 @@
 
 module.exports = (engine) => {
   let self = {};
-
-
-  //let engine = new Engine()
-
   // define a rule for detecting the player has exceeded foul limits.  Foul out any player who:
   // (has committed 5 fouls AND game is 40 minutes) OR (has committed 6 fouls AND game is 48 minutes)
   engine.addRule({
@@ -51,13 +47,16 @@ module.exports = (engine) => {
     * 1 new membership cannot be pay more than 5 times in 48 hours.
         * { membId: 12345, paymentAttempts: 5 } -> blocked
     */
-    engine
-    .run(req.body)
-    .then(results => {
-      console.log(results);
-      res.send(results.events);
-    })
-    //res.send('algo');
+    if (req.body.paymentAttempts) {
+      engine
+      .run(req.body)
+      .then(results => {
+        console.log(results);
+        res.send(results.events);
+      })
+    } else {
+      res.send('algo');
+    }
   };
 
   return self;
