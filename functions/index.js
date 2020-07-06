@@ -1,11 +1,14 @@
 const functions = require('firebase-functions');
+const rules = require('./rules/');
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
 
-
-exports.helloWorld = functions.https.onRequest((request, response) => {
- response.send("Hello from Firebase!");
+exports.payment = functions.https.onRequest(async (request, response) => {
+ rules.paymentsrules.index(request, response);
 });
 
+exports.userActivity = functions.https.onRequest(async (request, response) => {
+ rules.userActivityrules.index(request, response);
+});
