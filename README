@@ -25,3 +25,11 @@ User Activity
     * { membId: 12345, region: OK, City: FL, attempts: 3, attempt_region: CO, attempt_city: Denver } -> friction
 
 fraud.genericshield.com/user_activity/login
+
+Tech:
+
+Node JS 
+Express
+https://github.com/CacheControl/json-rules-engine
+
+Hosting: Firebase.
