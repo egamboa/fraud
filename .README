@@ -1,0 +1,27 @@
+Fraud System
+
+An API that implements custom rules for the business that caught suspicious behaviors from user activity.
+
+Payment
+* 1 membership will be flag as suspicious if has more than 3 payment attempts.
+    * { membId: 12345, paymentAttempts: 3 } -> flagged
+* 1 new membership cannot be pay more than 5 times in 48 hours.
+    * { membId: 12345, paymentAttempts: 5 } -> blocked
+* CC cannot be used from different locations(timezones/countries) within 24 hours.
+    * { last4_cc_number: 4444, locations: [ NY, NJ, Bangladesh], started_date: 1594052583(Epoch Time)  } -> blocked
+* CC cannot pay memberships from different IP address within 4 hours.
+    * { last4_cc_number: 4444, IP: 128.0.0.1, started_date: 1594052583(Epoch Time)  } -> blocked
+* If the user tries purchase at low traffic hours we introduce friction.
+    * { membId: 1235, last4_cc_number: 4444, IP: 128.0.0.1, started_date: 1594052583(3am)  } -> friction
+* If the user fails to enter the CVV more than 3 times it adds friction.
+    * { membId: 1235, last4_cc_number: 4444, cvv: 3, IP: 128.0.0.1, started_date: 1594052583(3am)  } -> friction
+
+fraud.genericshield.com/payments
+
+User Activity
+* Flag as suspicious if a login occurs outside of the membership user's location.
+    * { membId: 12345, region: OK, City: FL, attempt_region: CO, attempt_city: Denver } -> flagged
+* If the user fails to login more than 2 times it adds friction.
+    * { membId: 12345, region: OK, City: FL, attempts: 3, attempt_region: CO, attempt_city: Denver } -> friction
+
+fraud.genericshield.com/user_activity/login
