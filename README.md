@@ -19,6 +19,47 @@ An API that implements custom rules for the business that caught suspect behavio
 * If the user fails to enter the CVV more than 3 times it adds friction.
     * { membId: 1235, last4_cc_number: 4444, cvv: 3, IP: 128.0.0.1, started_date: 1594052583(3am)  } -> friction
 
+ 
+## Payment Activity
+https://us-central1-ls-fraud.cloudfunctions.net/payment
+
+    * Request
+    ```json
+    {
+        "paymentAttempts": "5",
+        "started_date": 1594095144
+    }
+
+    * Response
+    ```json
+
+    [
+        {
+            "type": "fouledOut",
+            "params": {
+                "message": "blocked!"
+            }
+        },
+        {
+            "type": "friction",
+            "params": {
+                "message": "not common buying hours!"
+            }
+        }
+    ]
+
+    * Request
+    ```json
+    {
+      "paymentAttempts": "2",
+      "started_date": 1594081593
+    }
+
+    * Response
+    ```json
+
+    []
+
 ## User Activity
 
 >https://us-central1-ls-fraud.cloudfunctions.net/userActivity
