@@ -22,7 +22,7 @@ An API that implements custom rules for the business that caught suspect behavio
  
 ## Payment Activity
 https://us-central1-ls-fraud.cloudfunctions.net/payment
-
+* user attempts are 5 and the buying hour is 5 am
     * Request
     ```json
     {
@@ -48,6 +48,7 @@ https://us-central1-ls-fraud.cloudfunctions.net/payment
       }
     ]
 
+* user attempts are 2 and the buying hour is 12 am
     * Request
     ```json
     {
