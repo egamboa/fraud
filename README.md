@@ -7,7 +7,7 @@ An API that implements custom rules for the business that caught suspect behavio
 >https://us-central1-ls-fraud.cloudfunctions.net/payment
 
 * 1 membership will be flag as suspect if has more than 3 payment attempts.
-    * { membId: 12345, paymentAttempts: 3 } -> flagged
+    * { membId: 12345, paymentAttempts: 3 } -> friction
 * 1 new membership cannot be pay more than 5 times in 48 hours.
     * { membId: 12345, paymentAttempts: 5 } -> blocked
 * CC cannot be used from different locations(timezones/countries) within 24 hours.
@@ -16,7 +16,7 @@ An API that implements custom rules for the business that caught suspect behavio
     * { last4_cc_number: 4444, IP: 128.0.0.1, started_date: 1594052583(Epoch Time)  } -> blocked
 * If the user tries purchase at low traffic hours we introduce friction.
     * { membId: 1235, last4_cc_number: 4444, IP: 128.0.0.1, started_date: 1594052583(3am)  } -> friction
-* If the user fails to enter the CVV more than 3 times it adds friction.
+* If the user fails to enter the CVV more than 3 times it adds friction. TODO.
     * { membId: 1235, last4_cc_number: 4444, cvv: 3, IP: 128.0.0.1, started_date: 1594052583(3am)  } -> friction
 
  
@@ -26,40 +26,47 @@ https://us-central1-ls-fraud.cloudfunctions.net/payment
     * Request
     ```json
     {
-        "paymentAttempts": "5",
-        "started_date": 1594095144
+        "paymentAttempts": 5,
+        "started_date": 1594095144,
+        "attempt_region": "CO",
+        "attempt_city": "Denver",
+        "region": "OK",
+        "city": "Ada",
+        "initialLocation": "Denver",
+        "currentLocation": "Ada",
+        "hoursPassed": 2,
+        "initialIP": "128.0.0.1",
+        "currentIP": "128.0.0.2"
     }
 
     * Response
     ```json
-
     [
-      {
-          "type": "access_blocked",
-          "params": {
-              "message": "blocked!"
-          }
-      },
-      {
-          "type": "friction",
-          "params": {
-              "message": "not common buying hours!"
-          }
-      }
+        {
+            "type": "access_blocked",
+            "params": {
+                "message": "too many payments"
+            }
+        },
+        {
+            "type": "access_blocked",
+            "params": {
+                "message": "different locations within 24h"
+            }
+        },
+        {
+            "type": "access_blocked",
+            "params": {
+                "message": "different IP within 2h"
+            }
+        },
+        {
+            "type": "friction",
+            "params": {
+                "message": "not common buying hours!"
+            }
+        }
     ]
-
-* user attempts are 2 and the buying hour is 12 am
-    * Request
-    ```json
-    {
-      "paymentAttempts": "2",
-      "started_date": 1594081593
-    }
-
-    * Response
-    ```json
-
-    []
 
 ## User Activity
 
@@ -119,11 +126,11 @@ https://us-central1-ls-fraud.cloudfunctions.net/payment
     ```
 
 ### Error Types
-Type | Description
------------- | -------------
-friction | It could be a bot so we can add a Captcha.
-suspect_activity | We can notify the user about the suspect activity.
-access_blocked | We can block the request.
+| Type             | Description                                        |
+| ---------------- | -------------------------------------------------- |
+| friction         | It could be a bot so we can add a Captcha.         |
+| suspect_activity | We can notify the user about the suspect activity. |
+| access_blocked   | We can block the request.                          |
 
 ### Tech:
 

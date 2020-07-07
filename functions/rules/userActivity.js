@@ -1,9 +1,7 @@
 // User activity Rules
 'use strict';
 
-const {constants} = require('./constants');
-
-module.exports = (engine) => {
+module.exports = (engine, constants) => {
   let self = {};
 
  /* 

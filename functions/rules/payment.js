@@ -3,6 +3,7 @@
 
 module.exports = (engine, constants) => {
   let self = {};
+
   engine.addRule({
     conditions: {
       any: [{
@@ -14,7 +15,89 @@ module.exports = (engine, constants) => {
     event: {
       type: constants.BLOCK_ACCESS,
       params: {
-        message: 'blocked!'
+        message: 'too many payments'
+      }
+    }
+  });
+
+  engine.addRule({
+    conditions: {
+      any: [{
+        fact: 'paymentAttempts',
+        operator: 'equal',
+        value: 3
+      }]
+    },
+    event: {
+      type: constants.FRICTION,
+      params: {
+        message: 'enough fails to show captcha'
+      }
+    }
+  });
+
+  engine.addRule({
+    conditions: {
+      any: [{
+        fact: 'paymentAttempts',
+        operator: 'equal',
+        value: 3
+      }]
+    },
+    event: {
+      type: constants.FRICTION,
+      params: {
+        message: 'enough fails to show captcha'
+      }
+    }
+  });
+
+  engine.addRule({
+    conditions: {
+      all: [
+        {
+          fact: 'hoursPassed',
+          operator: 'lessThanInclusive',
+          value: 24
+        },
+        {
+          fact: 'currentLocation',
+          operator: 'notEqual',
+          value: {
+            fact: 'initialLocation'
+          }
+        }
+      ]
+    },
+    event: {
+      type: constants.BLOCK_ACCESS,
+      params: {
+        message: 'different locations within 24h'
+      }
+    }
+  });
+
+  engine.addRule({
+    conditions: {
+      all: [
+        {
+          fact: 'hoursPassed',
+          operator: 'lessThanInclusive',
+          value: 2
+        },
+        {
+          fact: 'currentIP',
+          operator: 'notEqual',
+          value: {
+            fact: 'initialIP'
+          }
+        }
+      ]
+    },
+    event: {
+      type: constants.BLOCK_ACCESS,
+      params: {
+        message: 'different IP within 2h'
       }
     }
   });
