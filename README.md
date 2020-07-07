@@ -34,18 +34,18 @@ https://us-central1-ls-fraud.cloudfunctions.net/payment
     ```json
 
     [
-        {
-            "type": "fouledOut",
-            "params": {
-                "message": "blocked!"
-            }
-        },
-        {
-            "type": "friction",
-            "params": {
-                "message": "not common buying hours!"
-            }
-        }
+      {
+          "type": "access_blocked",
+          "params": {
+              "message": "blocked!"
+          }
+      },
+      {
+          "type": "friction",
+          "params": {
+              "message": "not common buying hours!"
+          }
+      }
     ]
 
     * Request
